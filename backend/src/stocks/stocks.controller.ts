@@ -3,9 +3,9 @@ import {
   Get,
   Post,
   Body,
-  Put,
   Param,
   Delete,
+  Patch,
 } from '@nestjs/common';
 import { StocksService } from './stocks.service';
 import { CreateStockDto } from './dto/create-stock.dto';
@@ -27,16 +27,16 @@ export class StocksController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.stocksService.findOne(+id);
+    return this.stocksService.findOne(id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   update(@Param('id') id: string, @Body() updateStockDto: UpdateStockDto) {
-    return this.stocksService.update(+id, updateStockDto);
+    return this.stocksService.update(id, updateStockDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.stocksService.remove(+id);
+    return this.stocksService.remove(id);
   }
 }
