@@ -18,4 +18,4 @@ export class MutualFund extends Document {
   previousData: prevData[];
 }
 
-export const StockSchema = SchemaFactory.createForClass(MutualFund);
+export const MutualFundSchema = SchemaFactory.createForClass(MutualFund);
