@@ -1,4 +1,6 @@
-import { PartialType } from '@nestjs/mapped-types';
+import { OmitType, PartialType } from '@nestjs/mapped-types';
 import { CreateMutualFundDto } from './create-mutual-fund.dto';
 
-export class UpdateMutualFundDto extends PartialType(CreateMutualFundDto) {}
+export class UpdateStockDto extends PartialType(
+  OmitType(CreateMutualFundDto, ['name'] as const),
+) {}
