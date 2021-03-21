@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { StocksModule } from './stocks/stocks.module';
+import { MutualFundsModule } from './mutual-funds/mutual-funds.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { StocksModule } from './stocks/stocks.module';
       inject: [ConfigService],
     }),
     StocksModule,
+    MutualFundsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
