@@ -11,9 +11,6 @@ class node {
 @Schema()
 export class chat extends Document {
   @Prop()
-  displayText: string;
-
-  @Prop()
   contextUri: string;
 
   @Prop([node])

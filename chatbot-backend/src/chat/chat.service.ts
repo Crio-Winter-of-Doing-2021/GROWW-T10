@@ -11,8 +11,12 @@ export class ChatService {
     @InjectModel(chat.name) private readonly chatModel: Model<chat>,
   ) {}
 
-  initialize(initUri: string) {
-    return initUri;
+  async initialize(initUri: string) {
+    const chat = await this.chatModel.findOne({ contextUri: initUri }).exec();
+    if (!chat) {
+      throw new NotFoundException(`Chat #${id} not found!`);
+    }
+    return chat;
   }
 
   create(createChatDto: CreateChatDto) {

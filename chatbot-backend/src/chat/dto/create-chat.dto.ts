@@ -9,9 +9,6 @@ class node {
 
 export class CreateChatDto extends Document {
   @IsNotEmpty()
-  displayText: string;
-
-  @IsNotEmpty()
   contextUri: string;
 
   @IsNotEmpty()
