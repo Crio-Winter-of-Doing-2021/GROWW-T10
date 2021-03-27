@@ -14,7 +14,7 @@ export class ChatService {
   async initialize(initUri: string) {
     const chat = await this.chatModel.findOne({ contextUri: initUri }).exec();
     if (!chat) {
-      throw new NotFoundException(`Chat #${id} not found!`);
+      throw new NotFoundException(`Chat #${initUri} not found!`);
     }
     return chat;
   }
