@@ -12,7 +12,7 @@ export class ChatService {
   ) {}
 
   async initialize(initUri: string) {
-    const chat = await this.chatModel.findOne({ contextUri: initUri }).exec();
+    const chat = await this.chatModel.findOne({ path: initUri }).exec();
     if (!chat) {
       throw new NotFoundException(`Chat #${initUri} not found!`);
     }
@@ -40,7 +40,7 @@ export class ChatService {
     const existingChat = await this.chatModel
       .findOneAndUpdate(
         { _id: id },
-        { $set: updateChatDto },
+        { set: updateChatDto },
         { useFindAndModify: false },
       )
       .exec();

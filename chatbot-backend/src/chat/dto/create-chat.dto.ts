@@ -1,16 +1,30 @@
-import { IsNotEmpty } from 'class-validator';
-
-class node {
-  description: string;
-  requestUrl?: string;
-  inputParams?: string[]; // ["name", "email"]
-  nextNodes: number[];
-}
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateChatDto {
   @IsNotEmpty()
-  contextUri: string;
+  path: string;
+
+  @IsOptional()
+  childRoutes?: chat[];
 
   @IsNotEmpty()
-  nodeList: node[];
+  action: string;
+
+  @IsOptional()
+  payload?: string;
+
+  @IsOptional()
+  placeholder?: string;
+
+  @IsOptional()
+  data?: string;
+}
+
+class chat {
+  path: string;
+  childRoutes?: chat[];
+  action: string;
+  payload?: string;
+  placeholder?: string;
+  data?: string;
 }
