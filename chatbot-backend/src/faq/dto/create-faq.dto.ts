@@ -2,9 +2,6 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateFaqDto {
   @IsNotEmpty()
-  category: string;
-
-  @IsNotEmpty()
   isLoginReq: boolean;
 
   @IsNotEmpty()

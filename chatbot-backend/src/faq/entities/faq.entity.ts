@@ -4,8 +4,6 @@ import { Document } from 'mongoose';
 @Schema()
 export class faq extends Document {
   @Prop()
-  category: string;
-  @Prop()
   isLoginReq: boolean;
   @Prop()
   isKycReq: boolean;

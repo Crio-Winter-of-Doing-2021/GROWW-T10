@@ -1,25 +1,32 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import { TreeEdit } from './Components/TreeEdit/treeedit';
+import { TreeList } from './Components/TreeList/treelist';
+import FaqList from './Components/FaqList/faqlist';
 
-function App() {
+export default function App() {
+  const [page, setPage] = useState('TreeList');
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <nav>
+        <h1>ChatBot Admin Panel</h1>
+        <ul>
+          <li>
+            <button onClick={() => setPage('TreeList')}>View All Trees</button>
+          </li>
+          <li>
+            <button onClick={() => setPage('CreateTree')}>New Tree</button>
+          </li>
+          <li>
+            <button onClick={() => setPage('FaqList')}>FAQ List</button>
+          </li>
+        </ul>
+      </nav>
+      <main>
+        {page === 'TreeList' && <TreeList />}
+        {page === 'CreateTree' && <TreeEdit />}
+        {page === 'FaqList' && <FaqList />}
+      </main>
+    </>
   );
 }
-
-export default App;
