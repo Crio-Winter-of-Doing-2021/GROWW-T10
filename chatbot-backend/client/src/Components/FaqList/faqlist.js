@@ -12,9 +12,11 @@ const FaqList = () => {
       console.log(error.message);
     }
   };
+
   useEffect(() => {
     getFaqs();
   }, []);
+
   return (
     <div>
       {faqs.map((faq) => (

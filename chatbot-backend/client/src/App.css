@@ -1,5 +1,5 @@
 main {
-  width: 80vw;
+  width: 90vw;
   margin: auto;
 }
 nav {
@@ -73,4 +73,115 @@ nav ul li {
   width: 30%;
   margin-left: auto;
   margin-right: 2%;
+}
+
+/* Tree */
+
+.treeCard {
+  display: flex;
+  align-items: center;
+  border: solid 2px;
+  padding: 2%;
+  margin-bottom: 2%;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+}
+
+.button-group button {
+  margin: 1%;
+}
+
+/* DND */
+.dndflow {
+  flex-direction: column;
+  display: flex;
+  height: 90vh;
+}
+
+.dndflow aside {
+  border: solid 1px;
+  border-left: none;
+  padding: 15px 10px;
+  height: 86vh;
+  font-size: 12px;
+  background: #fcfcfc;
+}
+
+.dndflow aside .description {
+  margin-bottom: 10px;
+}
+
+.dndflow .dndnode {
+  height: 20px;
+  padding: 4px;
+  border: 1px solid #1a192b;
+  border-radius: 2px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: grab;
+}
+
+.dndflow .dndnode.input {
+  border-color: #0041d0;
+}
+
+.dndflow .dndnode.output {
+  border-color: #ff0072;
+}
+
+.dndflow .reactflow-wrapper {
+  flex-grow: 1;
+  height: 100%;
+  border: solid 1px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dndflow .reactflow-wrapper button {
+  font-size: larger;
+}
+
+@media screen and (min-width: 768px) {
+  .dndflow {
+    flex-direction: row;
+  }
+
+  .dndflow aside {
+    width: 20%;
+    max-width: 250px;
+  }
+}
+
+.updatenode__controls {
+  padding: 2%;
+  border: solid 1px;
+  border-right: none;
+  height: 82.7vh;
+}
+
+.updatenode__controls label {
+  margin-top: 5%;
+  display: block;
+}
+
+.updatenode__controls input {
+  width: 100%;
+}
+
+.updatenode__bglabel {
+  margin-top: 10px;
+}
+
+.updatenode__checkboxwrapper {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
 }

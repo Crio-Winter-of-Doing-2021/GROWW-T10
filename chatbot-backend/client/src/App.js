@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
-import { TreeEdit } from './Components/TreeEdit/treeedit';
-import { TreeList } from './Components/TreeList/treelist';
+import TreeEdit from './Components/TreeEdit/treeedit';
+import TreeList from './Components/TreeList/treelist';
 import FaqList from './Components/FaqList/faqlist';
 
 export default function App() {
