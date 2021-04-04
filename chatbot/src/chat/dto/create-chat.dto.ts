@@ -5,7 +5,7 @@ export class CreateChatDto {
   path: string;
 
   @IsOptional()
-  childRoutes?: chat[];
+  childRoutes?: _chat[];
 
   @IsNotEmpty()
   action: string;
@@ -14,17 +14,17 @@ export class CreateChatDto {
   payload?: string;
 
   @IsOptional()
-  placeholder?: string;
+  placeholder?: string[];
 
   @IsOptional()
   data?: string;
 }
 
-class chat {
+class _chat {
   path: string;
-  childRoutes?: chat[];
+  childRoutes?: _chat[];
   action: string;
   payload?: string;
-  placeholder?: string;
+  placeholder?: string[];
   data?: string;
 }

@@ -40,7 +40,7 @@ export class ChatService {
     const existingChat = await this.chatModel
       .findOneAndUpdate(
         { _id: id },
-        { set: updateChatDto },
+        { $set: updateChatDto },
         { useFindAndModify: false },
       )
       .exec();

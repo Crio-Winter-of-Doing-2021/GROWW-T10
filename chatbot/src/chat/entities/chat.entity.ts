@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 
 class _chat {
   path: string;
-  childRoutes?: chat[];
+  childRoutes?: _chat[];
   action: string;
   payload?: string;
   placeholder?: string[];
