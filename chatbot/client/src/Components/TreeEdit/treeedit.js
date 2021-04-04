@@ -152,7 +152,7 @@ const TreeEdit = (props) => {
       console.log(error.message);
     }
 
-    // window.location = '/';
+    window.location = '/';
   };
 
   return (
