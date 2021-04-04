@@ -31,24 +31,27 @@ const TreeEdit = () => {
 
   // required data
   const [action, setAction] = useState('');
-  const [payload, setPayload] = useState();
-  const [data, setData] = useState();
+  const [payload, setPayload] = useState('');
   const [placeholders, setPlaceholders] = useState('');
 
   const onConnect = (params) => setElements((els) => addEdge(params, els));
+
   const onElementsRemove = (elementsToRemove) =>
     setElements((els) => removeElements(elementsToRemove, els));
+
   const onLoad = (_reactFlowInstance) =>
     setReactFlowInstance(_reactFlowInstance);
+
   const onEdgeUpdate = (oldEdge, newConnection) =>
     setElements((els) => updateEdge(oldEdge, newConnection, els));
+
   const onDrop = (event) => {
     event.preventDefault();
 
     if (reactFlowInstance) {
       const type = event.dataTransfer.getData('application/reactflow');
       const position = reactFlowInstance.project({
-        x: event.clientX,
+        x: event.clientX - 500,
         y: event.clientY - 40,
       });
       const newNode = {
@@ -58,17 +61,23 @@ const TreeEdit = () => {
         data: { label: `${type} node` },
       };
 
+      setSelectedID(newNode.id);
+      setNodeName(newNode.data.label);
+      setAction('');
+      setPlaceholders('');
+      setPayload('');
+
       setElements((es) => es.concat(newNode));
     }
   };
+
   const onElementClick = (event, element) => {
-    if (element.data && element.data.label) {
+    if (element.data) {
       setSelectedID(element.id);
       setNodeName(element.data.label);
       setAction(element.data.action);
       setPlaceholders(element.data.placeholder);
       setPayload(element.data.payload);
-      setData(element.data.data);
     }
   };
 
@@ -81,18 +90,20 @@ const TreeEdit = () => {
             label: nodeName,
             action: action,
             placeholder: placeholders,
-            data: data,
             payload: payload,
           };
+
+          console.log(`${selectedID}: ${JSON.stringify(el.data)}`);
         }
         return el;
       }),
     );
-  }, [action, nodeName, payload, placeholders, data, setElements, selectedID]);
+  }, [action, nodeName, payload, placeholders, setElements, selectedID]);
 
   const submit = async (elems) => {
     let nodes = {},
       paths = {};
+
     elems.map((elem) => {
       if (elem.source) {
         if (paths[elem.source]) {
@@ -108,11 +119,13 @@ const TreeEdit = () => {
       }
       return elem;
     });
+
     let postObject = nodes['1'],
       q = [postObject],
       qq = ['1'],
       el,
       cur;
+
     while (q.length) {
       cur = q.shift();
       el = qq.shift();
@@ -132,7 +145,6 @@ const TreeEdit = () => {
         return elem;
       });
     }
-    console.log(postObject);
 
     try {
       await fetch('/chat', {
@@ -146,6 +158,7 @@ const TreeEdit = () => {
 
     window.location = '/';
   };
+
   return (
     <div className="dndflow">
       <ReactFlowProvider>
@@ -161,13 +174,11 @@ const TreeEdit = () => {
               value={nodeName}
               onChange={(evt) => setNodeName(evt.target.value)}
             />
-            <label>Node Placeholders (comma Seperated): </label>
+            <label>Node Placeholders (Seperated by '---'): </label>
             <input
               value={placeholders}
               onChange={(evt) => setPlaceholders(evt.target.value)}
             />
-            <label>Node Data (only for FAQ Node): </label>
-            <input value={data} onChange={(evt) => setData(evt.target.value)} />
             <label>Node Payload: </label>
             <input
               value={payload}
