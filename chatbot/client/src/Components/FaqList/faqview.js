@@ -29,7 +29,9 @@ const FaqView = (props) => {
         <button
           className="id-button"
           onClick={() => {
-            navigator.clipboard.writeText(props.id);
+            navigator.clipboard.writeText(
+              `FAQ---http://localhost:8080/faq/${props.id}`,
+            );
           }}
         >
           {props.id}

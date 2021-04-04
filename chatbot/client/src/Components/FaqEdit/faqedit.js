@@ -5,10 +5,13 @@ const FaqEdit = (props) => {
     isKycReq: false,
     question: '',
     answer: '',
+    upvotes: 0,
+    downvotes: 0,
+    tags: ['DEFAULT'],
   });
 
   useEffect(() => {
-    if (props) {
+    if (props.item) {
       setFaq(props.item);
     }
   }, [props]);
@@ -22,11 +25,24 @@ const FaqEdit = (props) => {
   const submit = async (e) => {
     try {
       e.preventDefault();
-      await fetch(`faq/${props.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(faq),
-      });
+      let response;
+      if (props.item) {
+        response = await fetch(`/faq/${props.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(faq),
+        });
+      } else {
+        response = await fetch(`/faq`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(faq),
+        });
+      }
+      response = await response.json();
+      navigator.clipboard.writeText(
+        `FAQ---http://localhost:8080/faq/${response._id}`,
+      );
     } catch (error) {
       console.log(error.message);
     }

@@ -7,6 +7,21 @@ import ReactFlow, {
   updateEdge,
 } from 'react-flow-renderer';
 import Sidebar from './Sidebar';
+import Modal from 'react-modal';
+import FaqEdit from '../FaqEdit/faqedit';
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
+
+Modal.setAppElement(`#root`);
 
 const onDragOver = (event) => {
   event.preventDefault();
@@ -28,11 +43,20 @@ const TreeEdit = () => {
   ]);
   const [nodeName, setNodeName] = useState('Enter Context Route');
   const [selectedID, setSelectedID] = useState('1');
+  const [modalIsOpen, setIsOpen] = useState(false);
 
   // required data
   const [action, setAction] = useState('');
   const [payload, setPayload] = useState('');
   const [placeholders, setPlaceholders] = useState('');
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
 
   const onConnect = (params) => setElements((els) => addEdge(params, els));
 
@@ -125,7 +149,7 @@ const TreeEdit = () => {
       qq = ['1'],
       el,
       cur;
-
+    postObject.placeholder = postObject.placeholder.split('---');
     while (q.length) {
       cur = q.shift();
       el = qq.shift();
@@ -142,6 +166,7 @@ const TreeEdit = () => {
       });
       cur.childRoutes.map((elem) => {
         q.push(elem);
+        elem.placeholder = elem.placeholder.split('---');
         return elem;
       });
     }
@@ -179,7 +204,19 @@ const TreeEdit = () => {
               value={placeholders}
               onChange={(evt) => setPlaceholders(evt.target.value)}
             />
-            <label>Node Payload: </label>
+            <label>
+              Node Payload:{' '}
+              <button onClick={openModal}>Create New FAQ payload</button>
+              <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                style={customStyles}
+                contentLabel="Example Modal"
+              >
+                <FaqEdit />
+              </Modal>
+            </label>
+
             <input
               value={payload}
               onChange={(evt) => setPayload(evt.target.value)}
