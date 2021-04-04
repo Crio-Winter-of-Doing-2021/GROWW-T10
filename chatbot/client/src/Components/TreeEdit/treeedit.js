@@ -9,6 +9,8 @@ import ReactFlow, {
 import Sidebar from './Sidebar';
 import Modal from 'react-modal';
 import FaqEdit from '../FaqEdit/faqedit';
+import arrayToTree from '../../Utils/ArrayToTree';
+import treeToArray from '../../Utils/TreeToArray';
 
 const customStyles = {
   content: {
@@ -31,7 +33,7 @@ const onDragOver = (event) => {
 let id = 1;
 const getId = () => `${++id}`;
 
-const TreeEdit = () => {
+const TreeEdit = (props) => {
   const [reactFlowInstance, setReactFlowInstance] = useState();
   const [elements, setElements] = useState([
     {
@@ -44,8 +46,6 @@ const TreeEdit = () => {
   const [nodeName, setNodeName] = useState('Enter Context Route');
   const [selectedID, setSelectedID] = useState('1');
   const [modalIsOpen, setIsOpen] = useState(false);
-
-  // required data
   const [action, setAction] = useState('');
   const [payload, setPayload] = useState('');
   const [placeholders, setPlaceholders] = useState('');
@@ -116,72 +116,43 @@ const TreeEdit = () => {
             placeholder: placeholders,
             payload: payload,
           };
-
-          console.log(`${selectedID}: ${JSON.stringify(el.data)}`);
         }
         return el;
       }),
     );
   }, [action, nodeName, payload, placeholders, setElements, selectedID]);
 
-  const submit = async (elems) => {
-    let nodes = {},
-      paths = {};
-
-    elems.map((elem) => {
-      if (elem.source) {
-        if (paths[elem.source]) {
-          paths[elem.source].push(elem.target);
-        } else {
-          paths[elem.source] = [elem.target];
-        }
-      } else {
-        let curdata = elem.data;
-        curdata.path = curdata.label;
-        delete curdata.label;
-        nodes[elem.id] = curdata;
-      }
-      return elem;
-    });
-
-    let postObject = nodes['1'],
-      q = [postObject],
-      qq = ['1'],
-      el,
-      cur;
-    postObject.placeholder = postObject.placeholder.split('---');
-    while (q.length) {
-      cur = q.shift();
-      el = qq.shift();
-      if (!paths[el]) continue;
-      // eslint-disable-next-line no-loop-func
-      paths[el].map((pt) => {
-        if (cur.childRoutes) {
-          cur.childRoutes.push(nodes[pt]);
-        } else {
-          cur.childRoutes = [nodes[pt]];
-        }
-        qq.push(pt);
-        return pt;
-      });
-      cur.childRoutes.map((elem) => {
-        q.push(elem);
-        elem.placeholder = elem.placeholder.split('---');
-        return elem;
-      });
+  useEffect(() => {
+    if (props && props.item) {
+      let { i, array } = treeToArray(props.item);
+      setElements(array);
+      id = i;
+      console.log('.');
     }
+  }, [props]);
 
+  const submit = async (elems) => {
+    console.log(elems);
+    let postObject = arrayToTree(elems);
     try {
-      await fetch('/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(postObject),
-      });
+      if (props && props.item) {
+        await fetch(`/chat/${props.item._id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(postObject),
+        });
+      } else {
+        await fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(postObject),
+        });
+      }
     } catch (error) {
       console.log(error.message);
     }
 
-    window.location = '/';
+    // window.location = '/';
   };
 
   return (

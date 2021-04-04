@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Modal from 'react-modal';
 import FaqEdit from '../FaqEdit/faqedit';
+import Modal from 'react-modal';
 const customStyles = {
   content: {
     top: '50%',
