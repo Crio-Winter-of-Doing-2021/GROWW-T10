@@ -1,5 +1,6 @@
 import React from 'react';
 import { routes } from '../../routes';
+import { actions } from '../../actions';
 import { WebChat } from './webchat';
 import { ReactBot } from './helper';
 import { Text} from './components/text';
@@ -9,16 +10,17 @@ export const Chatbot = () => {
     const ref = React.createRef();
 
     const bot = new ReactBot({
+        actions,
         defaultRoutes: [
             {
                 path: '404',
-                action: () => <Text>I don't understand you</Text>, // eslint-disable-line
+                action: "NotFound", // eslint-disable-line
             },
         ],
         routes
     })
 
-    const handleClick = (event) => {
+    const handleClick = () => {
         sendPayload("hi");
     }
 
@@ -31,11 +33,10 @@ export const Chatbot = () => {
         <WebChat
             ref={ref}
             bot={bot}
-            onInit={()=> console.log('Bot Initialized!')}
+            onInit={handleClick}
             onOpen={() => console.log('Bot Opened!')}
             onClose={() => console.log('Bot Closed!')}
         />
-        <button onClick={handleClick}>Click me!</button>
         </React.Fragment>
     );
 }

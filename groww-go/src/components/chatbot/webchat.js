@@ -13,19 +13,20 @@ import {
     isText
 } from './util/message-utils';
 import { WebchatContext } from './contexts';
-import { WebchatMessageList } from './components/message-list';
 import TriggerButton from './components/TriggerButton';
-import { WebchatReplies } from './components/replies';
 import { Text } from './components/text';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
+import List from '@material-ui/core/List';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import CloseIcon from '@material-ui/icons/Close';
 import GrowwIcon from './assets/GrowwIcon.svg';
+import Divider from '@material-ui/core/Divider';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,7 +41,14 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: '10px'
     },
     content: {
-        overflowY: 'auto'
+        overflowY: 'auto',
+        height: '100%'
+    },
+    action: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        backgroundColor: 'white',
+        justifyContent: 'center',
     }
 }));
 
@@ -61,6 +69,7 @@ export const WebChat = React.forwardRef((props, ref) => {
         webchatState
     } = useWebChat()
     const firstUpdate = React.useRef(true)
+    const messagesEndRef = React.useRef(null)
     const currentDateString = () => new Date().toISOString();
     const { initialSession, bot } = props;
 
@@ -72,11 +81,15 @@ export const WebChat = React.forwardRef((props, ref) => {
         updateLastMessageDate(currentDateString())
     }
 
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    }
+
     const messageComponentFromInput = input => {
         let messageComponent = null
         if (isText(input)) {
             messageComponent = (
-                <Text id={input.id} payload={input.payload} from={SENDERS.user}>
+                <Text id={input.id} from={SENDERS.user}>
                     {input.data}
                 </Text>
             )
@@ -98,16 +111,16 @@ export const WebChat = React.forwardRef((props, ref) => {
         addBotResponse(resp)
         updateLatestInput(input)
         updateLastMessageDate(currentDateString())
-        updateReplies(false)
+
     }
 
     const updateSessionWithUser = userToUpdate =>
         updateSession(merge(webchatState.session, { user: userToUpdate }));
 
 
-    const sendText = async text => {
+    const sendText = async (text, payload) => {
         if (!text) return
-        const input = { type: INPUT.TEXT, data: text }
+        const input = { type: INPUT.TEXT, data: text, payload }
         await sendInput(input)
     }
 
@@ -130,7 +143,12 @@ export const WebChat = React.forwardRef((props, ref) => {
         if (!webchatState.isWebchatOpen && props.onClose && !firstUpdate.current) {
             props.onClose()
         }
-    }, [webchatState.isWebchatOpen,props])
+        scrollToBottom()
+    }, [webchatState.isWebchatOpen, props])
+
+    React.useEffect(() => {
+        scrollToBottom()
+    }, [webchatState.latestInput])
 
     React.useImperativeHandle(ref, () => ({
         sendPayload,
@@ -140,13 +158,6 @@ export const WebChat = React.forwardRef((props, ref) => {
             updateReplies(false)
         },
     }));
-
-    const webchatMessageList = () => (
-        <WebchatMessageList style={{ flex: 1 }}>
-        </WebchatMessageList>
-    )
-    const webchatReplies = () => <WebchatReplies replies={webchatState.replies} />
-
     return (
         <WebchatContext.Provider
             value={{
@@ -171,29 +182,42 @@ export const WebChat = React.forwardRef((props, ref) => {
                 </div>
             )}
             {webchatState.isWebchatOpen && (
-                <Card variant="outlined" className={classes.root}>
+                <Card raised className={classes.root}>
                     <CardHeader
                         avatar={
                             <Avatar alt="Groww Icon" src={GrowwIcon} />
                         }
                         action={
-                            <IconButton onClick={event => {
+                            <IconButton color="primary" onClick={event => {
                                 toggleWebchat(false)
-                                event.preventDefault()
                             }} aria-label="settings">
-                                <MoreVertIcon />
+                                <CloseIcon />
                             </IconButton>
                         }
                         title={
                             <Typography variant="h5" color="primary">Groww-Go</Typography>
                         }
                     />
+                    <Divider />
                     <CardContent className={classes.content} >
-                        {webchatMessageList()}
-                        {webchatState.replies &&
-                            Object.keys(webchatState.replies).length > 0 &&
-                            webchatReplies()}
+                        <List>
+                            {webchatState.messagesComponents.map((e, i) => (
+                                <React.Fragment key={i}>
+                                    {e}
+                                </React.Fragment>
+                            ))}
+                           
+                        </List>
+                        <div ref={messagesEndRef} />
                     </CardContent>
+                    <Divider />
+                    <CardActions className={classes.action} disableSpacing>
+                        {webchatState.replies &&
+                            webchatState.replies.map((r, i) => (
+                                <React.Fragment key={i}>{r}</React.Fragment>
+                            ))}
+
+                    </CardActions>
                 </Card>
             )}
         </WebchatContext.Provider>

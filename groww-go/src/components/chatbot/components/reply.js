@@ -1,9 +1,21 @@
 import React from 'react';
 import { WebchatContext } from '../contexts';
-import Chip from '@material-ui/core/Chip';
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+
+
+const useStyles = makeStyles((theme) => ({
+    chip: {
+        margin: '2px 2px',
+       borderRadius: '30px',
+       textTransform: 'none'
+    }
+
+}));
 
 export const Reply = props => {
-    const { sendPayload } = React.useContext(WebchatContext)
+    const classes = useStyles();
+    const { sendText } = React.useContext(WebchatContext)
     const handleClick = event => {
         event.preventDefault()
         let payload = null;
@@ -11,14 +23,14 @@ export const Reply = props => {
             if (props.path) {
                 payload = { path: props.path }
             }
-            sendPayload(payload)
+            sendText(props.children, payload)
         }
     }
     return (
-        <Chip
-            label={props.children}
-            clickable onClick={e => handleClick(e)}
-            color="secondary"
-            variant="outlined" />
+
+        <Button variant="outlined" color="secondary" className={classes.chip} onClick={handleClick}>
+            {props.children}
+        </Button>
+
     );
 }

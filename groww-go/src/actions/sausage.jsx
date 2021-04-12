@@ -6,11 +6,14 @@ export default class extends React.Component {
   render() {
     return (
       <div>
-    <Text>You chose Sausage on Pizza</Text>
-    <Text>Wish to redirect to main menu?</Text>
-    <Reply path='redirect'>Yes</Reply>
-        <Reply path='end'>No</Reply>
-        </div>
+        <Text>
+          You chose Sausage on Pizza
+          <br/>
+          Wish to redirect to main menu?
+          <Reply path='redirect'>Yes</Reply>
+          <Reply path='end'>No</Reply>
+        </Text>
+      </div>
     )
 
   }

@@ -1,11 +1,14 @@
 import React from 'react';
-import { WebchatContext } from '../contexts';
-import Paper from '@material-ui/core/Paper';
-
+import { Message } from './message';
+import { mapObjectNonBooleanValues } from '../util/react'
+import { INPUT } from '../constants'
 export const Text = props => {
+
+    const textProps = mapObjectNonBooleanValues({
+        ...props,
+        ...{ children: React.Children.toArray(props.children) },
+    })
     return (
-       <Paper >
-           {props.children}
-       </Paper>
+        <Message  {...textProps} type={INPUT.TEXT} />
     );
 }

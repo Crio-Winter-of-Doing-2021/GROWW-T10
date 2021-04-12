@@ -6,13 +6,13 @@ export default class extends React.Component {
   render() {
     return (
       <div>
-      <Text>
-        You chose Pizza! Choose one ingredient:
-      
-      </Text>
-        <Reply path='sausage'>Sausage</Reply>
-        <Reply path='bacon'>Bacon</Reply>
-        </div>
+        <Text>
+          You chose Pizza! Choose one ingredient:
+          <Reply path='sausage'>Sausage</Reply>
+          <Reply path='bacon'>Bacon</Reply>
+        </Text>
+
+      </div>
     )
   }
 }

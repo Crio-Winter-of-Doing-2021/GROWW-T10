@@ -4,18 +4,21 @@ import { NoMatchingRouteError } from './errors';
 
 export default class ReactBot {
     constructor({
+        actions,
         routes,
         defaultRoutes
     }) {
         this.routes = [...routes, ...defaultRoutes]
+        this.actions = actions
     }
 
     async renderReactActions({ request, actions }) {
         const renderedActions = []
         let props
         let renderedAction
-        for (const Action of actions) {
+        for (let Action of actions) {
             if (Action) {
+                Action = this.actions[Action]
                 props = Action.botInit ? await Action.botInit(request) : {}
                 renderedAction = (
                     <RequestContext.Provider value={request}>
@@ -71,14 +74,15 @@ export default class ReactBot {
     processInput(input, lastRoutePath = null) {
         let routeParams = {}
         let brokenFlow = false
-        console.log(input);
         const lastRoute = this.getRouteByPath(lastRoutePath, this.routes)
-        if (!lastRoute && input.payload.path)
+        if (!lastRoute && input.payload.path){
             routeParams.route = this.getRouteByPath(input.payload.path, this.routes)
-        if (lastRoute && lastRoute.childRoutes && !routeParams.route)
+        }
+        if (lastRoute && lastRoute.childRoutes && !routeParams.route){
             //get route depending of current ChildRoute
             routeParams.route = this.getRouteByPath(input.payload.path, lastRoute.childRoutes)
-        if (!routeParams || !Object.keys(routeParams).length) {
+        }
+        if (!routeParams.route || !Object.keys(routeParams).length) {
             /*
                 we couldn't find a route in the state of the lastRoute, so let's find in
                 the general conf.route
@@ -86,13 +90,17 @@ export default class ReactBot {
             brokenFlow = Boolean(lastRoutePath)
             routeParams.route = this.getRouteByPath(input.payload.path, this.routes)
         }
-        console.log(brokenFlow)
         if (routeParams && Object.keys(routeParams).length) {
             if (routeParams.route) {
                 if ('action' in routeParams.route) {
-                    if (lastRoutePath && !brokenFlow)
+                    if (lastRoutePath && !brokenFlow){
                         lastRoutePath = `${lastRoutePath}/${routeParams.route.path}`
-                    else lastRoutePath = routeParams.route.path
+                    }
+
+                    else {
+                        lastRoutePath = routeParams.route.path
+                    }
+
                     return {
                         action: routeParams.route.action,
                         params: routeParams.route.params || [],
