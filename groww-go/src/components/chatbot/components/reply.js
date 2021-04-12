@@ -2,6 +2,7 @@ import React from 'react';
 import { WebchatContext } from '../contexts';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import Zoom from '@material-ui/core/Zoom';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -27,10 +28,11 @@ export const Reply = props => {
         }
     }
     return (
-
+        <Zoom in={true}>
         <Button variant="outlined" color="secondary" className={classes.chip} onClick={handleClick}>
             {props.children}
         </Button>
+        </Zoom >
 
     );
 }

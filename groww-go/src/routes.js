@@ -5,7 +5,7 @@ export const routes = [
         params: {
             text: [" Hi! Choose what you want to eat: Hi! Choose what you want to eat: Hi! Choose what you want to eat: Hi! Choose what you want to eat:","Hi! Choose what you want to eat:"],
             reply: [
-                { path: 'pizza', text: 'Pizzad sdg dg df d gfd gdg fdg d gdg d d g dgadg sfd gad g sGS gag sd gs gsd gds gdg sd g ' },
+                { path: 'pizza', text: 'Pizzad sdg dg df d gfd gdg fdg d gdg d d g dgadg sfd gad g sGS' },
                 { path: 'pasta', text: 'Pasta' },
                 { path: 'pizza', text: 'Pizza' },
                 { path: 'pasta', text: 'Pasta' },

@@ -27,6 +27,9 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import GrowwIcon from './assets/GrowwIcon.svg';
 import Divider from '@material-ui/core/Divider';
+import Slide from '@material-ui/core/Slide';
+import { ReactBot } from './helper';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -47,6 +50,8 @@ const useStyles = makeStyles((theme) => ({
     action: {
         display: 'flex',
         flexWrap: 'wrap',
+        overflowY: 'auto',
+        minHeight: 48,
         backgroundColor: 'white',
         justifyContent: 'center',
     }
@@ -71,7 +76,17 @@ export const WebChat = React.forwardRef((props, ref) => {
     const firstUpdate = React.useRef(true)
     const messagesEndRef = React.useRef(null)
     const currentDateString = () => new Date().toISOString();
-    const { initialSession, bot } = props;
+    const { initialSession, actions, routes } = props;
+    const bot = new ReactBot({
+        actions,
+        defaultRoutes: [
+            {
+                path: '404',
+                action: "NotFound", // eslint-disable-line
+            },
+        ],
+        routes
+    })
 
     const addBotResponse = ({ response, session, lastRoutePath }) => {
         if (Array.isArray(response)) response.map(r => addMessageComponent(r))
@@ -171,17 +186,16 @@ export const WebChat = React.forwardRef((props, ref) => {
                 webchatState,
             }}
         >
-            {!webchatState.isWebchatOpen && (
-                <div
-                    onClick={event => {
-                        toggleWebchat(true)
-                        event.preventDefault()
-                    }}
-                >
-                    <TriggerButton />
-                </div>
-            )}
-            {webchatState.isWebchatOpen && (
+            <div
+                onClick={event => {
+                    toggleWebchat(true)
+                    event.preventDefault()
+                }}
+            >
+                <TriggerButton />
+            </div>
+
+            <Slide direction="up" in={webchatState.isWebchatOpen} timeout={300}>
                 <Card raised className={classes.root}>
                     <CardHeader
                         avatar={
@@ -201,17 +215,19 @@ export const WebChat = React.forwardRef((props, ref) => {
                     <Divider />
                     <CardContent className={classes.content} >
                         <List>
-                            {webchatState.messagesComponents.map((e, i) => (
-                                <React.Fragment key={i}>
-                                    {e}
-                                </React.Fragment>
-                            ))}
-                           
+                            {webchatState.messagesComponents &&
+                                webchatState.messagesComponents.map((e, i) => (
+                                    <React.Fragment key={i}>
+                                        {e}
+                                    </React.Fragment>
+                                ))}
+
                         </List>
                         <div ref={messagesEndRef} />
                     </CardContent>
                     <Divider />
                     <CardActions className={classes.action} disableSpacing>
+
                         {webchatState.replies &&
                             webchatState.replies.map((r, i) => (
                                 <React.Fragment key={i}>{r}</React.Fragment>
@@ -219,7 +235,7 @@ export const WebChat = React.forwardRef((props, ref) => {
 
                     </CardActions>
                 </Card>
-            )}
+            </Slide>
         </WebchatContext.Provider>
     )
 

@@ -19,7 +19,7 @@ export const webchatInitialState = {
     session: { user: null },
     lastRoutePath: null,
     error: {},
-    isWebchatOpen: true,
+    isWebchatOpen: false,
     lastMessageUpdate: undefined,
 }
 
