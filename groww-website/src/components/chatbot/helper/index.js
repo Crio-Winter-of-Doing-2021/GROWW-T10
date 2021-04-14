@@ -1,0 +1,1 @@
+export { default as ReactBot } from './react-bot';
