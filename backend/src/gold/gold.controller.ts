@@ -1,34 +1,42 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { GoldService } from './gold.service';
 import { CreateGoldDto } from './dto/create-gold.dto';
 import { UpdateGoldDto } from './dto/update-gold.dto';
 
 @Controller('gold')
 export class GoldController {
-  constructor(private readonly goldService: GoldService) {}
+  constructor(private readonly goldsService: GoldService) {}
 
   @Post()
   create(@Body() createGoldDto: CreateGoldDto) {
-    return this.goldService.create(createGoldDto);
+    return this.goldsService.create(createGoldDto);
   }
 
   @Get()
   findAll() {
-    return this.goldService.findAll();
+    return this.goldsService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.goldService.findOne(+id);
+    return this.goldsService.findOne(id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   update(@Param('id') id: string, @Body() updateGoldDto: UpdateGoldDto) {
-    return this.goldService.update(+id, updateGoldDto);
+    return this.goldsService.update(id, updateGoldDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.goldService.remove(+id);
+    return this.goldsService.remove(id);
   }
 }

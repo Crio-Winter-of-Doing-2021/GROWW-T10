@@ -1,26 +1,50 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateGoldDto } from './dto/create-gold.dto';
 import { UpdateGoldDto } from './dto/update-gold.dto';
+import { Gold } from './entities/gold.entity';
 
 @Injectable()
 export class GoldService {
+  constructor(
+    @InjectModel(Gold.name)
+    private readonly goldModel: Model<Gold>,
+  ) {}
+
   create(createGoldDto: CreateGoldDto) {
-    return 'This action adds a new gold';
+    const gold = new this.goldModel(createGoldDto);
+    return gold.save();
   }
 
   findAll() {
-    return `This action returns all gold`;
+    return this.goldModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} gold`;
+  async findOne(id: string) {
+    const gold = await this.goldModel.findOne({ _id: id }).exec();
+    if (!gold) {
+      throw new NotFoundException(`Mutual fund #${id} not found!`);
+    }
+    return gold;
   }
 
-  update(id: number, updateGoldDto: UpdateGoldDto) {
-    return `This action updates a #${id} gold`;
+  async update(id: string, updateGoldDto: UpdateGoldDto) {
+    const existingGold = await this.goldModel
+      .findOneAndUpdate(
+        { _id: id },
+        { $set: updateGoldDto },
+        { useFindAndModify: false },
+      )
+      .exec();
+    if (!existingGold) {
+      throw new NotFoundException(`Gold #${id} not found!`);
+    }
+    return existingGold;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} gold`;
+  async remove(id: string) {
+    const gold = await this.findOne(id);
+    return gold.remove();
   }
 }

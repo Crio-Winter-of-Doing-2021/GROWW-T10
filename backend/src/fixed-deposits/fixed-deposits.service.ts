@@ -26,7 +26,7 @@ export class FixedDepositsService {
       .findOne({ _id: id })
       .exec();
     if (!fixedDeposit) {
-      throw new NotFoundException(`Mutual fund #${id} not found!`);
+      throw new NotFoundException(`Fixed Deposit #${id} not found!`);
     }
     return fixedDeposit;
   }
