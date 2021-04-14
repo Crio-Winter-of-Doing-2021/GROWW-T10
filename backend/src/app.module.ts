@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { StocksModule } from './stocks/stocks.module';
 import { MutualFundsModule } from './mutual-funds/mutual-funds.module';
 import { FixedDepositsModule } from './fixed-deposits/fixed-deposits.module';
+import { GoldModule } from './gold/gold.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { FixedDepositsModule } from './fixed-deposits/fixed-deposits.module';
     StocksModule,
     MutualFundsModule,
     FixedDepositsModule,
+    GoldModule,
   ],
   controllers: [AppController],
   providers: [AppService],
