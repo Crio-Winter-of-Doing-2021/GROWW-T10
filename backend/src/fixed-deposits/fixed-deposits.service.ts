@@ -1,26 +1,52 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateFixedDepositDto } from './dto/create-fixed-deposit.dto';
 import { UpdateFixedDepositDto } from './dto/update-fixed-deposit.dto';
+import { FixedDeposit } from './entities/fixed-deposit.entity';
 
 @Injectable()
 export class FixedDepositsService {
+  constructor(
+    @InjectModel(FixedDeposit.name)
+    private readonly fixedDepositModel: Model<FixedDeposit>,
+  ) {}
+
   create(createFixedDepositDto: CreateFixedDepositDto) {
-    return 'This action adds a new fixedDeposit';
+    const fixedDeposit = new this.fixedDepositModel(createFixedDepositDto);
+    return fixedDeposit.save();
   }
 
   findAll() {
-    return `This action returns all fixedDeposits`;
+    return this.fixedDepositModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} fixedDeposit`;
+  async findOne(id: string) {
+    const fixedDeposit = await this.fixedDepositModel
+      .findOne({ _id: id })
+      .exec();
+    if (!fixedDeposit) {
+      throw new NotFoundException(`Mutual fund #${id} not found!`);
+    }
+    return fixedDeposit;
   }
 
-  update(id: number, updateFixedDepositDto: UpdateFixedDepositDto) {
-    return `This action updates a #${id} fixedDeposit`;
+  async update(id: string, updateFixedDepositDto: UpdateFixedDepositDto) {
+    const existingFixedDeposit = await this.fixedDepositModel
+      .findOneAndUpdate(
+        { _id: id },
+        { $set: updateFixedDepositDto },
+        { useFindAndModify: false },
+      )
+      .exec();
+    if (!existingFixedDeposit) {
+      throw new NotFoundException(`Mutual fund #${id} not found!`);
+    }
+    return existingFixedDeposit;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} fixedDeposit`;
+  async remove(id: string) {
+    const fixedDeposit = await this.findOne(id);
+    return fixedDeposit.remove();
   }
 }

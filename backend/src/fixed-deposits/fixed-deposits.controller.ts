@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { FixedDepositsService } from './fixed-deposits.service';
 import { CreateFixedDepositDto } from './dto/create-fixed-deposit.dto';
 import { UpdateFixedDepositDto } from './dto/update-fixed-deposit.dto';
@@ -19,16 +27,19 @@ export class FixedDepositsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.fixedDepositsService.findOne(+id);
+    return this.fixedDepositsService.findOne(id);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateFixedDepositDto: UpdateFixedDepositDto) {
-    return this.fixedDepositsService.update(+id, updateFixedDepositDto);
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateFixedDepositDto: UpdateFixedDepositDto,
+  ) {
+    return this.fixedDepositsService.update(id, updateFixedDepositDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.fixedDepositsService.remove(+id);
+    return this.fixedDepositsService.remove(id);
   }
 }
