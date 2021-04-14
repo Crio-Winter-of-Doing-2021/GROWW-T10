@@ -5,6 +5,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { StocksModule } from './stocks/stocks.module';
 import { MutualFundsModule } from './mutual-funds/mutual-funds.module';
+import { FixedDepositsModule } from './fixed-deposits/fixed-deposits.module';
+import { GoldModule } from './gold/gold.module';
+import { UsStocksModule } from './us-stocks/us-stocks.module';
 
 @Module({
   imports: [
@@ -20,6 +23,9 @@ import { MutualFundsModule } from './mutual-funds/mutual-funds.module';
     }),
     StocksModule,
     MutualFundsModule,
+    FixedDepositsModule,
+    GoldModule,
+    UsStocksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
